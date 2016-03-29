@@ -1,0 +1,12 @@
+﻿<Properties StartupItem="CGGTTS File Filter\CGGTTS File Filter.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CGGTTS File Filter\Form1.cs">
+    <Files>
+      <File FileName="CGGTTS File Filter\Form1.cs" Line="91" Column="39" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
