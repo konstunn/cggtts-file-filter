@@ -16,7 +16,13 @@ namespace CGGTTS_File_Filter
 {
     public partial class MainForm : Form
     {
-        // TODO: optimize, reorganize data structures
+        // TODO:
+        // - skip to lines on messages list box click
+        // - refresh sat listboxes on mjd combobox value change
+        // - replace sat numeric up down with combobox !
+        // - add edit menu and undo, redo buttons in there
+
+        // TODO: optimize, reorganize data structures ?
 
         // options and file snapshots
         private Stack<List<string>> fileHistory = new Stack<List<string>>();
