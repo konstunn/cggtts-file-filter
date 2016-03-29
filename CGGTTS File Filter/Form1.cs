@@ -18,7 +18,7 @@ namespace CGGTTS_File_Filter
     {
         // TODO: optimize, reorganize data structures
 
-        // snapshots
+        // options and file snapshots
         private Stack<List<string>> fileHistory = new Stack<List<string>>();
         private Stack<SortedSet<int>> satOptionsHistory = new Stack<SortedSet<int>>();
         private Stack<SortedSet<string>> mjdOptionsHistory = new Stack<SortedSet<string>>();
@@ -46,67 +46,62 @@ namespace CGGTTS_File_Filter
             InitializeComponent();
         }
 
+        private void clearCriteriaOptions()
+        {
+            satOptions.Clear();
+            mjdOptions.Clear();
+            frcOptions.Clear();
+        }
+
         private void openFile(string filename)
         {
             // clear from data of previously opened file
             fileWorkingCopy.Clear();
 
-            satOptions.Clear();
-            mjdOptions.Clear();
-            frcOptions.Clear();
+            clearCriteriaOptions();
 
             // read file
-            using (StreamReader streamReader = new StreamReader(openFileDialog.FileName))
+            StreamReader streamReader = new StreamReader(openFileDialog.FileName);
+            
+            messagesListBox.Items.Clear();
+
+            string line;
+            for (int i = 0; (line = streamReader.ReadLine()) != null; ++i)
             {
-                bool notifiedLineEmpty = false;
-                bool notifiedWrongWordsNumber = false;
-                string line;
+                fileWorkingCopy.Add(line);
 
-                for (int i = 0; (line = streamReader.ReadLine()) != null; ++i)
+                // FIXME: not a robust approach (use regular expressions)
+                if (i >= MEASUREMENTS_DATA_START_LINE_NUMBER)
                 {
-                    fileWorkingCopy.Add(line);
-
-                    // FIXME: not a robust approach
-                    if (i >= MEASUREMENTS_DATA_START_LINE_NUMBER)
+                    // NOTE: this is not neccessary
+                    if (line == "")
                     {
-                        if (line == "" && !notifiedLineEmpty)
-                        {
-                            // TODO replace message box with log area
-                            MessageBox.Show("В секции данных обнаружены пустые строки, например, строка " + i,
-                                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            notifiedLineEmpty = true;
-                            continue;
-                        }
-    
-                        string[] fields = line.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (fields.Count() != 24 && !notifiedWrongWordsNumber)
-                        {
-                            // TODO replace message box with log area
-                            MessageBox.Show(
-                                "В секции данных обнаружены строки с неверным количеством полей, например, строка " + i, 
-                                "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            notifiedWrongWordsNumber = true;
-                            continue;
-                        }
-
-                        try
-                        {
-                            satOptions.Add(Int32.Parse(fields[SAT_FIELD_INDEX]));
-                        }
-                        catch (Exception ex)
-                        {
-                            // TODO: handle exception properly
-                            MessageBox.Show("Не могу прочитать номер спутника в строке " + i + 
-                            " . Пропускаю строку.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            continue;
-                        }
-
-                        mjdOptions.Add(fields[MJD_FIELD_INDEX]);
-                        frcOptions.Add(fields[FRC_FIELD_INDEX]);   
+                        messagesListBox.Items.Add("Предупреждение: строка " + i + " пуста");
+                        continue;
                     }
+    
+                    string[] fields = line.Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                    // FIXME: remove magic number
+                    if (fields.Count() != 24)
+                    {
+                        messagesListBox.Items.Add("Предупреждение: в строке " + i + " неверное число полей");
+                        continue;
+                    }
+
+                    try {
+                        satOptions.Add(Int32.Parse(fields[SAT_FIELD_INDEX]));
+                    } catch (Exception ex) {
+                        messagesListBox.Items.Add("Ошибка: строка " + i + " : не могу прочитать номер спутника");
+                        continue;
+                    }
+
+                    // FIXME: validate, using regexps
+                    mjdOptions.Add(fields[MJD_FIELD_INDEX]);
+                    frcOptions.Add(fields[FRC_FIELD_INDEX]);   
                 }
             }
+            streamReader.Dispose();
         }
 
         private void openFileMenuItem_Click(object sender, EventArgs e)
@@ -123,14 +118,13 @@ namespace CGGTTS_File_Filter
                 updateCriteriaControls();
 
                 // notify that file is loaded
-                //toolStripStatusLabel1.Text = "Загружен файл '" + openFileDialog.FileName + "'";
-                toolStripStatusLabel1.Text = "Файл загружен.";
+                toolStripStatusLabel.Text = "Файл загружен.";
                 this.Text = "CGGTTS File Filter (" + openFileDialog.FileName + ")";
                 fileIsLoaded = true;
 
                 // output file content and lines count
                 previewTextBox.Lines = fileWorkingCopy.ToArray();
-                toolStripStatusLabel2.Text = "Количество строк: " + previewTextBox.Lines.Count();
+                linesCountToolStripStatusLabel.Text = "Количество строк: " + previewTextBox.Lines.Count();
 
                 Cursor.Current = Cursors.Default;
             }
@@ -150,22 +144,19 @@ namespace CGGTTS_File_Filter
             mjdComboBox.Enabled = !mjdComboBox.Enabled;
 
             // TODO: refresh sat ListBoxes correspondingly
-            if (mjdCheckBox.Enabled)
-            {
-
-            }
+            if (mjdCheckBox.Enabled) { }
         }
 
         private void sttimeCheckBox_CheckedChanged(object sender, EventArgs e) {
-            sttimePickerFrom.Enabled = !sttimePickerFrom.Enabled;
-            sttimePickerTo.Enabled = !sttimePickerTo.Enabled;
+            sttimePickerTo.Enabled = sttimePickerFrom.Enabled = !sttimePickerFrom.Enabled;
         }
 
         private void frcCheckBox_CheckedChanged(object sender, EventArgs e) {
             frcComboBox.Enabled = !frcComboBox.Enabled;
         }
 
-        private bool isStateValidToProcessData() {
+        private bool isStateValidToProcessData() 
+        {
             // if file was not loaded, print error message and return
             if (!fileIsLoaded)
             {
@@ -175,10 +166,8 @@ namespace CGGTTS_File_Filter
             }
 
             // if all checkboxes are unchecked, show error message and return 
-            if (satCheckBox.Checked == false &&
-                frcCheckBox.Checked == false &&
-                mjdCheckBox.Checked == false &&
-                sttimeCheckBox.Checked == false)
+            if (!satCheckBox.Checked && !frcCheckBox.Checked && 
+                !mjdCheckBox.Checked && !sttimeCheckBox.Checked)
             {
                 MessageBox.Show("Не выбрано ни одного критерия.", "Ошибка",  MessageBoxButtons.OK, 
                     MessageBoxIcon.Warning);
@@ -219,10 +208,42 @@ namespace CGGTTS_File_Filter
                     sttimePickerTo.Value.ToString("HH:mm:ss");
 
             changelogStrings.Push(str + " .");
+
+            changelogTextBox.Lines = changelogStrings.ToArray();
         }
 
-        // TODO: refactor
-        // TODO: split this method into submethods
+        private void pushDataToHistory()
+        {
+            satOptionsHistory.Push(new SortedSet<int>(satOptions));
+            mjdOptionsHistory.Push(new SortedSet<string>(mjdOptions));
+            frcOptionsHistory.Push(new SortedSet<string>(frcOptions));
+            fileHistory.Push(new List<string>(fileWorkingCopy));
+        }
+
+        private void popDataFromHistory()
+        {
+            satOptionsHistory.Pop();
+            mjdOptionsHistory.Pop();
+            frcOptionsHistory.Pop();
+            fileHistory.Pop();
+        }
+
+        private bool onlySatIsChecked() {        
+            return satCheckBox.Checked && 
+                !frcCheckBox.Checked && !mjdCheckBox.Checked && !sttimeCheckBox.Checked;
+        }
+
+        private bool onlyMjdIsChecked() {
+            return mjdCheckBox.Checked && 
+                            !frcCheckBox.Checked && !satCheckBox.Checked && !sttimeCheckBox.Checked;
+        }
+
+        private bool onlyFrcIsChecked() {
+            return frcCheckBox.Checked &&
+                !satCheckBox.Checked && !mjdCheckBox.Checked && !sttimeCheckBox.Checked;
+        }
+
+        // TODO: refactor, split this method into submethods
         // PROPOSAL: may count removed lines and print it in status bar
         private void deleteStringsButton_Click(object sender, EventArgs e)
         {
@@ -233,13 +254,9 @@ namespace CGGTTS_File_Filter
             Cursor.Current = Cursors.WaitCursor;
 
             // this variables shows whether there were any lines removed
-            bool fileCopyHasChanged = false;
+            bool fileCopyIsChanged = false;
 
-            // backup to history
-            satOptionsHistory.Push(new SortedSet<int>(satOptions));
-            mjdOptionsHistory.Push(new SortedSet<string>(mjdOptions));
-            frcOptionsHistory.Push(new SortedSet<string>(frcOptions));
-            fileHistory.Push(new List<string>(fileWorkingCopy));
+            pushDataToHistory();
 
             // iterate through lines and remove those which match criteria
             for (int i = fileWorkingCopy.Count - 1; i >= MEASUREMENTS_DATA_START_LINE_NUMBER; --i)
@@ -248,7 +265,7 @@ namespace CGGTTS_File_Filter
                 string[] fields =
                     fileWorkingCopy.ElementAt(i).Split((string[])null, StringSplitOptions.RemoveEmptyEntries);
 
-                if (fields.Count() != 24)
+                if (fields.Count() != 24) // FIXME bad silent skip
                     continue;
 
                 // parse STTIME field
@@ -256,54 +273,51 @@ namespace CGGTTS_File_Filter
                     TimeSpan.ParseExact(fields[STTIME_FIELD_INDEX], "hhmmss",
                         System.Globalization.CultureInfo.CurrentCulture);
 
-                // TODO: refactor!
+                bool timeMatches = TimeSpan.Compare(time, sttimePickerFrom.Value.TimeOfDay) >= 0 &&
+                    TimeSpan.Compare(time, sttimePickerTo.Value.TimeOfDay) <= 0;
+                int satNo = Int32.Parse(fields[SAT_FIELD_INDEX]);
+                int mjd = Int32.Parse(fields[MJD_FIELD_INDEX]);
+                string frc = fields[FRC_FIELD_INDEX];
+
+                // TODO: refactor
                 // if the line satisfies criteria
-                if ((!satCheckBox.Checked || Int32.Parse(fields[SAT_FIELD_INDEX]) == satNumericUpDown.Value) &&
-                    (!mjdCheckBox.Checked || Int32.Parse(fields[MJD_FIELD_INDEX]) == Int32.Parse(mjdComboBox.Text)) &&
-                    (!sttimeCheckBox.Checked || TimeSpan.Compare(time, sttimePickerFrom.Value.TimeOfDay) >= 0 &&
-                    TimeSpan.Compare(time, sttimePickerTo.Value.TimeOfDay) <= 0) &&
-                    (!frcCheckBox.Checked || frcComboBox.Text == fields[FRC_FIELD_INDEX]))
+                if ((!satCheckBox.Checked || satNo == satNumericUpDown.Value) &&
+                    (!mjdCheckBox.Checked || mjd == Int32.Parse(mjdComboBox.Text)) &&
+                    (!sttimeCheckBox.Checked || timeMatches) &&
+                    (!frcCheckBox.Checked || frc == frcComboBox.Text))
                 {
                         fileWorkingCopy.RemoveAt(i); // then remove the line
-                        fileCopyHasChanged = true;
+                        fileCopyIsChanged = true;
 
-                        // TODO: refactor!
                         // conditionally, remove corresponding criteria options
-                        if (satCheckBox.Checked && !frcCheckBox.Checked && !mjdCheckBox.Checked && !sttimeCheckBox.Checked)
-                            satOptions.Remove(Int32.Parse(fields[SAT_FIELD_INDEX]));
-                        if (mjdCheckBox.Checked && !frcCheckBox.Checked && !satCheckBox.Checked && !sttimeCheckBox.Checked) 
-                            mjdOptions.Remove(fields[MJD_FIELD_INDEX]);
-                        if (frcCheckBox.Checked && !satCheckBox.Checked && !mjdCheckBox.Checked && !sttimeCheckBox.Checked)
-                            frcOptions.Remove(fields[FRC_FIELD_INDEX]);
+                        // - that's not enough, FIXME
+                        if (onlySatIsChecked())
+                            satOptions.Remove(satNo);
+                        if (onlyMjdIsChecked()) 
+                            mjdOptions.Remove(mjd.ToString());
+                        if (onlyFrcIsChecked())
+                            frcOptions.Remove(frc);
                 }
             }
 
             // notify if no strings were removed
-            if (!fileCopyHasChanged)
+            if (!fileCopyIsChanged)
             {
                 MessageBox.Show("Не найдено подходящих строк для удаления.",
                    "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // remove file and options backups
-                fileHistory.Pop();
-                satOptionsHistory.Pop();
-                mjdOptionsHistory.Pop();
-                frcOptionsHistory.Pop();
-            }
-            else
+                popDataFromHistory();
+            } 
+            else 
             {
-                updateChangeLog();
+                enableSaveButtons(true);
 
-                // output changelog
-                changelogTextBox.Lines = changelogStrings.ToArray();
-                
+                updateChangeLog();
                 updateCriteriaControls();
              
-                // output preview
                 previewTextBox.Lines = fileWorkingCopy.ToArray();
 
-                // output lines count
-                toolStripStatusLabel2.Text = "Количество строк: " + previewTextBox.Lines.Count();
+                linesCountToolStripStatusLabel.Text = "Количество строк: " + previewTextBox.Lines.Count();
 
                 cancelButton.Enabled = true;
             }
@@ -327,36 +341,40 @@ namespace CGGTTS_File_Filter
             mjdComboBox.Items.Clear();
 
             foreach (string line in mjdOptions)
-            {
                 mjdComboBox.Items.Add(line);
-            }
             if (mjdComboBox.Items.Count > 0)
                 mjdComboBox.SelectedIndex = 0;
 
             frcComboBox.Items.Clear();
 
             foreach (string line in frcOptions)
-            {
                 frcComboBox.Items.Add(line);
-            }
             if (frcComboBox.Items.Count > 0)
                 frcComboBox.SelectedIndex = 0;
         }
 
+        private void enableSaveButtons(bool enabled) {
+            saveAsMenuItem.Enabled = saveMenuItem.Enabled = enabled;
+        }
+
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            // FIXME: this is not neccessary
             if (!fileIsLoaded)
             {
                 MessageBox.Show("Сначала откройте файл.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             if (fileHistory.Count == 0)
             {
                 MessageBox.Show("Файл в первоначальном состоянии. Отменять нечего.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            enableSaveButtons(true);
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -373,7 +391,7 @@ namespace CGGTTS_File_Filter
             previewTextBox.Lines = fileWorkingCopy.ToArray();
 
             // output lines count
-            toolStripStatusLabel2.Text = "Количество строк: " + previewTextBox.Lines.Count();
+            linesCountToolStripStatusLabel.Text = "Количество строк: " + previewTextBox.Lines.Count();
 
             satOptions = satOptionsHistory.Pop();
             mjdOptions = mjdOptionsHistory.Pop();
@@ -391,10 +409,11 @@ namespace CGGTTS_File_Filter
 
         private void saveAsMenuItem_Click(object sender, EventArgs e)
         {
+            // TODO: just disable the button
             if (!fileIsLoaded)
             {
-                MessageBox.Show("Сначала откройте файл.",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Сначала откройте файл.", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -404,8 +423,8 @@ namespace CGGTTS_File_Filter
             {
                 System.IO.File.WriteAllLines(saveFileDialog.FileName, fileWorkingCopy.ToArray());
 
-                // FIXME: too long string
-                toolStripStatusLabel1.Text = "Файл сохранен: " + saveFileDialog.FileName;
+                toolStripStatusLabel.Text = "Файл сохранен.";
+                this.Text = "CGGTTS File Filter (" + saveFileDialog.FileName + ")";
             }
         }
 
@@ -513,16 +532,13 @@ namespace CGGTTS_File_Filter
         private void searchSplitButton_Click(object sender, EventArgs e)
         {
             if (!isStateValidToProcessData())
-            {
                 return;
-            }
 
             // magic starts here :)
 
             int startCharIndex = previewTextBox.SelectionStart;
 
-            int startLineIndex = 
-                previewTextBox.GetLineFromCharIndex(startCharIndex);
+            int startLineIndex = previewTextBox.GetLineFromCharIndex(startCharIndex);
 
             int targetLineNumber = 0;
             bool lastSearchWasForward = false;
@@ -565,11 +581,12 @@ namespace CGGTTS_File_Filter
 
             int start = previewTextBox.GetFirstCharIndexFromLine(targetLineNumber);
 
-            toolStripStatusLabel3.Text = "Последняя найденная строка: " + targetLineNumber.ToString();
+            lastFoundLineNumToolStripStatusLabel.Text = "Последняя найденная строка: " + targetLineNumber;
 
             previewTextBox.Focus();
 
-            previewTextBox.Select(start, previewTextBox.Lines[targetLineNumber].Length);
+            previewTextBox.Select(start + previewTextBox.Lines[targetLineNumber].Length, 
+                -previewTextBox.Lines[targetLineNumber].Length);
 
             previewTextBox.ScrollToCaret();    
         }
@@ -649,24 +666,23 @@ namespace CGGTTS_File_Filter
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            if (!fileIsLoaded) {
+            if (!fileIsLoaded)
+            {
                 MessageBox.Show("Сначала откройте файл.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            System.IO.File.WriteAllLines(openFileDialog.FileName, 
+            System.IO.File.WriteAllLines(openFileDialog.FileName,
                 fileWorkingCopy.ToArray());
 
             // FIXME: too long line
-            toolStripStatusLabel1.Text = "Файл сохранен: " + openFileDialog.FileName;
+            //toolStripStatusLabel1.Text = "Файл сохранен: " + openFileDialog.FileName;
+            toolStripStatusLabel.Text = "Файл сохранен.";
+
+            enableSaveButtons(false);
         }
 
         // TODO: disable save menu items if file was not modified
-
-        private void fileMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
     }
 }

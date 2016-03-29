@@ -33,14 +33,16 @@
             this.sttimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exportToExcelMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.searchSplitButton = new CGGTTS_File_Filter.SplitButton();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.searchForwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchBackwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +60,7 @@
             this.mjdCheckBox = new System.Windows.Forms.CheckBox();
             this.satCheckBox = new System.Windows.Forms.CheckBox();
             this.previewGroupBox = new System.Windows.Forms.GroupBox();
+            this.messagesListBox = new System.Windows.Forms.ListBox();
             this.gloSatListBox = new System.Windows.Forms.ListBox();
             this.gpsSatListBox = new System.Windows.Forms.ListBox();
             this.glonassLabel = new System.Windows.Forms.Label();
@@ -66,11 +69,9 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.searchSplitButton = new CGGTTS_File_Filter.SplitButton();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.linesCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lastFoundLineNumToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip.SuspendLayout();
             this.settingsGroupBox.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
@@ -84,10 +85,9 @@
             // 
             this.sttimePickerTo.Enabled = false;
             this.sttimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.sttimePickerTo.Location = new System.Drawing.Point(361, 27);
-            this.sttimePickerTo.Margin = new System.Windows.Forms.Padding(4);
+            this.sttimePickerTo.Location = new System.Drawing.Point(293, 20);
             this.sttimePickerTo.Name = "sttimePickerTo";
-            this.sttimePickerTo.Size = new System.Drawing.Size(74, 22);
+            this.sttimePickerTo.Size = new System.Drawing.Size(65, 20);
             this.sttimePickerTo.TabIndex = 7;
             this.sttimePickerTo.Value = new System.DateTime(2015, 12, 9, 23, 59, 0, 0);
             // 
@@ -95,10 +95,9 @@
             // 
             this.sttimePickerFrom.Enabled = false;
             this.sttimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.sttimePickerFrom.Location = new System.Drawing.Point(269, 26);
-            this.sttimePickerFrom.Margin = new System.Windows.Forms.Padding(4);
+            this.sttimePickerFrom.Location = new System.Drawing.Point(206, 20);
             this.sttimePickerFrom.Name = "sttimePickerFrom";
-            this.sttimePickerFrom.Size = new System.Drawing.Size(72, 22);
+            this.sttimePickerFrom.Size = new System.Drawing.Size(68, 20);
             this.sttimePickerFrom.TabIndex = 7;
             this.sttimePickerFrom.Value = new System.DateTime(2015, 12, 9, 0, 0, 0, 0);
             // 
@@ -111,70 +110,75 @@
             this.menuStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(732, 28);
+            this.menuStrip.Size = new System.Drawing.Size(684, 24);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
             // fileMenuItem
             // 
             this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
+            this.openFileMenuItem,
             this.toolStripSeparator3,
-            this.toolStripMenuItem5,
+            this.saveMenuItem,
             this.saveAsMenuItem,
             this.toolStripSeparator2,
             this.exportToExcelMenuItem,
             this.toolStripSeparator1,
             this.exitMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
-            this.fileMenuItem.Size = new System.Drawing.Size(57, 24);
+            this.fileMenuItem.Size = new System.Drawing.Size(48, 20);
             this.fileMenuItem.Text = "Файл";
-            this.fileMenuItem.Click += new System.EventHandler(this.fileMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(193, 26);
-            this.toolStripMenuItem2.Text = "Открыть...";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.openFileMenuItem_Click);
+            this.openFileMenuItem.Name = "toolStripMenuItem2";
+            this.openFileMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.openFileMenuItem.Text = "Открыть...";
+            this.openFileMenuItem.Click += new System.EventHandler(this.openFileMenuItem_Click);
             // 
-            // toolStripMenuItem5
+            // toolStripSeparator3
             // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(193, 26);
-            this.toolStripMenuItem5.Text = "Сохранить";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.saveMenuItem_Click);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(159, 6);
+            // 
+            // saveMenuItem
+            // 
+            this.saveMenuItem.Enabled = false;
+            this.saveMenuItem.Name = "saveMenuItem";
+            this.saveMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.saveMenuItem.Text = "Сохранить";
+            this.saveMenuItem.Click += new System.EventHandler(this.saveMenuItem_Click);
             // 
             // saveAsMenuItem
             // 
+            this.saveAsMenuItem.Enabled = false;
             this.saveAsMenuItem.Name = "saveAsMenuItem";
-            this.saveAsMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.saveAsMenuItem.Size = new System.Drawing.Size(162, 22);
             this.saveAsMenuItem.Text = "Сохранить как...";
             this.saveAsMenuItem.Click += new System.EventHandler(this.saveAsMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(159, 6);
             this.toolStripSeparator2.Visible = false;
             // 
             // exportToExcelMenuItem
             // 
             this.exportToExcelMenuItem.Name = "exportToExcelMenuItem";
-            this.exportToExcelMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.exportToExcelMenuItem.Size = new System.Drawing.Size(162, 22);
             this.exportToExcelMenuItem.Text = "Экспорт в Excel";
             this.exportToExcelMenuItem.Visible = false;
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.exitMenuItem.Size = new System.Drawing.Size(162, 22);
             this.exitMenuItem.Text = "Выход";
             this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
@@ -197,14 +201,24 @@
             this.settingsGroupBox.Controls.Add(this.sttimeCheckBox);
             this.settingsGroupBox.Controls.Add(this.mjdCheckBox);
             this.settingsGroupBox.Controls.Add(this.satCheckBox);
-            this.settingsGroupBox.Location = new System.Drawing.Point(4, 30);
-            this.settingsGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.settingsGroupBox.Location = new System.Drawing.Point(3, 24);
             this.settingsGroupBox.Name = "settingsGroupBox";
-            this.settingsGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.settingsGroupBox.Size = new System.Drawing.Size(724, 162);
+            this.settingsGroupBox.Size = new System.Drawing.Size(677, 132);
             this.settingsGroupBox.TabIndex = 3;
             this.settingsGroupBox.TabStop = false;
             this.settingsGroupBox.Text = "Критерии";
+            // 
+            // searchSplitButton
+            // 
+            this.searchSplitButton.ContextMenuStrip = this.contextMenuStrip;
+            this.searchSplitButton.Location = new System.Drawing.Point(16, 95);
+            this.searchSplitButton.Name = "searchSplitButton";
+            this.searchSplitButton.Size = new System.Drawing.Size(108, 23);
+            this.searchSplitButton.TabIndex = 18;
+            this.searchSplitButton.Text = "Поиск вперед";
+            this.searchSplitButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.searchSplitButton.UseVisualStyleBackColor = true;
+            this.searchSplitButton.Click += new System.EventHandler(this.searchSplitButton_Click);
             // 
             // contextMenuStrip
             // 
@@ -213,21 +227,21 @@
             this.searchForwardMenuItem,
             this.searchBackwardMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip1";
-            this.contextMenuStrip.Size = new System.Drawing.Size(136, 56);
+            this.contextMenuStrip.Size = new System.Drawing.Size(114, 48);
             // 
             // searchForwardMenuItem
             // 
             this.searchForwardMenuItem.Checked = true;
             this.searchForwardMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.searchForwardMenuItem.Name = "searchForwardMenuItem";
-            this.searchForwardMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.searchForwardMenuItem.Size = new System.Drawing.Size(113, 22);
             this.searchForwardMenuItem.Text = "Вперед";
             this.searchForwardMenuItem.Click += new System.EventHandler(this.searchForwardMenuItem_Click);
             // 
             // searchBackwardMenuItem
             // 
             this.searchBackwardMenuItem.Name = "searchBackwardMenuItem";
-            this.searchBackwardMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.searchBackwardMenuItem.Size = new System.Drawing.Size(113, 22);
             this.searchBackwardMenuItem.Text = "Назад";
             this.searchBackwardMenuItem.Click += new System.EventHandler(this.searchBackwardMenuItem_Click);
             // 
@@ -235,21 +249,18 @@
             // 
             this.groupBox1.Controls.Add(this.cancelButton);
             this.groupBox1.Controls.Add(this.deleteStringsButton);
-            this.groupBox1.Location = new System.Drawing.Point(185, 98);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Location = new System.Drawing.Point(139, 80);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(259, 57);
+            this.groupBox1.Size = new System.Drawing.Size(219, 46);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             // 
             // cancelButton
             // 
             this.cancelButton.Enabled = false;
-            this.cancelButton.Location = new System.Drawing.Point(146, 18);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
+            this.cancelButton.Location = new System.Drawing.Point(134, 15);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(105, 28);
+            this.cancelButton.Size = new System.Drawing.Size(79, 23);
             this.cancelButton.TabIndex = 12;
             this.cancelButton.Text = "Отменить";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -257,10 +268,9 @@
             // 
             // deleteStringsButton
             // 
-            this.deleteStringsButton.Location = new System.Drawing.Point(8, 18);
-            this.deleteStringsButton.Margin = new System.Windows.Forms.Padding(4);
+            this.deleteStringsButton.Location = new System.Drawing.Point(6, 15);
             this.deleteStringsButton.Name = "deleteStringsButton";
-            this.deleteStringsButton.Size = new System.Drawing.Size(103, 28);
+            this.deleteStringsButton.Size = new System.Drawing.Size(77, 23);
             this.deleteStringsButton.TabIndex = 11;
             this.deleteStringsButton.Text = "Удалить";
             this.deleteStringsButton.UseVisualStyleBackColor = true;
@@ -269,10 +279,9 @@
             // changelogLabel
             // 
             this.changelogLabel.AutoSize = true;
-            this.changelogLabel.Location = new System.Drawing.Point(455, 12);
-            this.changelogLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.changelogLabel.Location = new System.Drawing.Point(366, 11);
             this.changelogLabel.Name = "changelogLabel";
-            this.changelogLabel.Size = new System.Drawing.Size(144, 17);
+            this.changelogLabel.Size = new System.Drawing.Size(112, 13);
             this.changelogLabel.TabIndex = 14;
             this.changelogLabel.Text = "История изменений:";
             // 
@@ -285,13 +294,13 @@
             this.changelogTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.changelogTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.changelogTextBox.Font = new System.Drawing.Font("Lucida Console", 9F);
-            this.changelogTextBox.Location = new System.Drawing.Point(458, 33);
-            this.changelogTextBox.Margin = new System.Windows.Forms.Padding(10, 4, 10, 10);
+            this.changelogTextBox.Location = new System.Drawing.Point(369, 27);
+            this.changelogTextBox.Margin = new System.Windows.Forms.Padding(8, 3, 8, 8);
             this.changelogTextBox.Multiline = true;
             this.changelogTextBox.Name = "changelogTextBox";
             this.changelogTextBox.ReadOnly = true;
             this.changelogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.changelogTextBox.Size = new System.Drawing.Size(256, 121);
+            this.changelogTextBox.Size = new System.Drawing.Size(301, 99);
             this.changelogTextBox.TabIndex = 13;
             this.changelogTextBox.TabStop = false;
             this.changelogTextBox.WordWrap = false;
@@ -302,10 +311,9 @@
             this.mjdComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.mjdComboBox.Enabled = false;
             this.mjdComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.mjdComboBox.Location = new System.Drawing.Point(92, 66);
-            this.mjdComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.mjdComboBox.Location = new System.Drawing.Point(69, 54);
             this.mjdComboBox.Name = "mjdComboBox";
-            this.mjdComboBox.Size = new System.Drawing.Size(63, 24);
+            this.mjdComboBox.Size = new System.Drawing.Size(55, 21);
             this.mjdComboBox.Sorted = true;
             this.mjdComboBox.TabIndex = 11;
             // 
@@ -313,25 +321,24 @@
             // 
             this.dashLabel.AutoSize = true;
             this.dashLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.dashLabel.Location = new System.Drawing.Point(343, 27);
-            this.dashLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.dashLabel.Location = new System.Drawing.Point(277, 20);
+            this.dashLabel.Margin = new System.Windows.Forms.Padding(0);
             this.dashLabel.Name = "dashLabel";
-            this.dashLabel.Size = new System.Drawing.Size(15, 20);
+            this.dashLabel.Size = new System.Drawing.Size(13, 17);
             this.dashLabel.TabIndex = 4;
             this.dashLabel.Text = "-";
             // 
             // satNumericUpDown
             // 
             this.satNumericUpDown.Enabled = false;
-            this.satNumericUpDown.Location = new System.Drawing.Point(92, 27);
-            this.satNumericUpDown.Margin = new System.Windows.Forms.Padding(4);
+            this.satNumericUpDown.Location = new System.Drawing.Point(69, 22);
             this.satNumericUpDown.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
             this.satNumericUpDown.Name = "satNumericUpDown";
-            this.satNumericUpDown.Size = new System.Drawing.Size(63, 22);
+            this.satNumericUpDown.Size = new System.Drawing.Size(55, 20);
             this.satNumericUpDown.TabIndex = 3;
             this.satNumericUpDown.Value = new decimal(new int[] {
             1,
@@ -344,20 +351,18 @@
             this.frcComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.frcComboBox.Enabled = false;
             this.frcComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.frcComboBox.Location = new System.Drawing.Point(269, 66);
-            this.frcComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.frcComboBox.Location = new System.Drawing.Point(202, 54);
             this.frcComboBox.Name = "frcComboBox";
-            this.frcComboBox.Size = new System.Drawing.Size(167, 24);
+            this.frcComboBox.Size = new System.Drawing.Size(156, 21);
             this.frcComboBox.Sorted = true;
             this.frcComboBox.TabIndex = 2;
             // 
             // frcCheckBox
             // 
             this.frcCheckBox.AutoSize = true;
-            this.frcCheckBox.Location = new System.Drawing.Point(185, 69);
-            this.frcCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.frcCheckBox.Location = new System.Drawing.Point(139, 56);
             this.frcCheckBox.Name = "frcCheckBox";
-            this.frcCheckBox.Size = new System.Drawing.Size(61, 21);
+            this.frcCheckBox.Size = new System.Drawing.Size(50, 17);
             this.frcCheckBox.TabIndex = 0;
             this.frcCheckBox.Text = "FRC:";
             this.frcCheckBox.UseVisualStyleBackColor = true;
@@ -366,10 +371,9 @@
             // sttimeCheckBox
             // 
             this.sttimeCheckBox.AutoSize = true;
-            this.sttimeCheckBox.Location = new System.Drawing.Point(185, 28);
-            this.sttimeCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.sttimeCheckBox.Location = new System.Drawing.Point(139, 23);
             this.sttimeCheckBox.Name = "sttimeCheckBox";
-            this.sttimeCheckBox.Size = new System.Drawing.Size(84, 21);
+            this.sttimeCheckBox.Size = new System.Drawing.Size(69, 17);
             this.sttimeCheckBox.TabIndex = 0;
             this.sttimeCheckBox.Text = "STTIME:";
             this.sttimeCheckBox.UseVisualStyleBackColor = true;
@@ -378,10 +382,9 @@
             // mjdCheckBox
             // 
             this.mjdCheckBox.AutoSize = true;
-            this.mjdCheckBox.Location = new System.Drawing.Point(22, 69);
-            this.mjdCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.mjdCheckBox.Location = new System.Drawing.Point(16, 56);
             this.mjdCheckBox.Name = "mjdCheckBox";
-            this.mjdCheckBox.Size = new System.Drawing.Size(62, 21);
+            this.mjdCheckBox.Size = new System.Drawing.Size(51, 17);
             this.mjdCheckBox.TabIndex = 0;
             this.mjdCheckBox.Text = "MJD:";
             this.mjdCheckBox.UseVisualStyleBackColor = true;
@@ -390,10 +393,9 @@
             // satCheckBox
             // 
             this.satCheckBox.AutoSize = true;
-            this.satCheckBox.Location = new System.Drawing.Point(22, 27);
-            this.satCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.satCheckBox.Location = new System.Drawing.Point(16, 22);
             this.satCheckBox.Name = "satCheckBox";
-            this.satCheckBox.Size = new System.Drawing.Size(61, 21);
+            this.satCheckBox.Size = new System.Drawing.Size(50, 17);
             this.satCheckBox.TabIndex = 0;
             this.satCheckBox.Text = "SAT:";
             this.satCheckBox.UseVisualStyleBackColor = true;
@@ -405,18 +407,29 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.previewGroupBox.BackColor = System.Drawing.SystemColors.Control;
+            this.previewGroupBox.Controls.Add(this.messagesListBox);
             this.previewGroupBox.Controls.Add(this.gloSatListBox);
             this.previewGroupBox.Controls.Add(this.gpsSatListBox);
             this.previewGroupBox.Controls.Add(this.glonassLabel);
             this.previewGroupBox.Controls.Add(this.gpsLabel);
             this.previewGroupBox.Controls.Add(this.previewTextBox);
-            this.previewGroupBox.Location = new System.Drawing.Point(4, 196);
+            this.previewGroupBox.Location = new System.Drawing.Point(3, 159);
             this.previewGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.previewGroupBox.Name = "previewGroupBox";
-            this.previewGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.previewGroupBox.Size = new System.Drawing.Size(724, 229);
+            this.previewGroupBox.Size = new System.Drawing.Size(677, 303);
             this.previewGroupBox.TabIndex = 4;
             this.previewGroupBox.TabStop = false;
+            // 
+            // messagesListBox
+            // 
+            this.messagesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.messagesListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.messagesListBox.FormattingEnabled = true;
+            this.messagesListBox.Location = new System.Drawing.Point(6, 241);
+            this.messagesListBox.Name = "messagesListBox";
+            this.messagesListBox.Size = new System.Drawing.Size(664, 56);
+            this.messagesListBox.TabIndex = 15;
             // 
             // gloSatListBox
             // 
@@ -424,14 +437,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gloSatListBox.ColumnWidth = 21;
             this.gloSatListBox.FormattingEnabled = true;
-            this.gloSatListBox.ItemHeight = 16;
-            this.gloSatListBox.Location = new System.Drawing.Point(54, 23);
-            this.gloSatListBox.Margin = new System.Windows.Forms.Padding(4);
+            this.gloSatListBox.Location = new System.Drawing.Point(40, 19);
             this.gloSatListBox.MultiColumn = true;
             this.gloSatListBox.Name = "gloSatListBox";
             this.gloSatListBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.gloSatListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.gloSatListBox.Size = new System.Drawing.Size(660, 20);
+            this.gloSatListBox.Size = new System.Drawing.Size(630, 17);
             this.gloSatListBox.TabIndex = 14;
             this.gloSatListBox.TabStop = false;
             // 
@@ -442,33 +453,29 @@
             this.gpsSatListBox.ColumnWidth = 21;
             this.gpsSatListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.gpsSatListBox.FormattingEnabled = true;
-            this.gpsSatListBox.ItemHeight = 17;
-            this.gpsSatListBox.Location = new System.Drawing.Point(54, 53);
-            this.gpsSatListBox.Margin = new System.Windows.Forms.Padding(4);
+            this.gpsSatListBox.Location = new System.Drawing.Point(40, 43);
             this.gpsSatListBox.MultiColumn = true;
             this.gpsSatListBox.Name = "gpsSatListBox";
             this.gpsSatListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.gpsSatListBox.Size = new System.Drawing.Size(660, 21);
+            this.gpsSatListBox.Size = new System.Drawing.Size(630, 17);
             this.gpsSatListBox.TabIndex = 14;
             this.gpsSatListBox.TabStop = false;
             // 
             // glonassLabel
             // 
             this.glonassLabel.AutoSize = true;
-            this.glonassLabel.Location = new System.Drawing.Point(11, 26);
-            this.glonassLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.glonassLabel.Location = new System.Drawing.Point(8, 21);
             this.glonassLabel.Name = "glonassLabel";
-            this.glonassLabel.Size = new System.Drawing.Size(38, 17);
+            this.glonassLabel.Size = new System.Drawing.Size(29, 13);
             this.glonassLabel.TabIndex = 13;
             this.glonassLabel.Text = "GLO";
             // 
             // gpsLabel
             // 
             this.gpsLabel.AutoSize = true;
-            this.gpsLabel.Location = new System.Drawing.Point(11, 57);
-            this.gpsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.gpsLabel.Location = new System.Drawing.Point(8, 46);
             this.gpsLabel.Name = "gpsLabel";
-            this.gpsLabel.Size = new System.Drawing.Size(37, 17);
+            this.gpsLabel.Size = new System.Drawing.Size(29, 13);
             this.gpsLabel.TabIndex = 13;
             this.gpsLabel.Text = "GPS";
             // 
@@ -482,13 +489,12 @@
             this.previewTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.previewTextBox.Font = new System.Drawing.Font("Lucida Console", 9F);
             this.previewTextBox.HideSelection = false;
-            this.previewTextBox.Location = new System.Drawing.Point(8, 81);
-            this.previewTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.previewTextBox.Location = new System.Drawing.Point(6, 66);
             this.previewTextBox.Multiline = true;
             this.previewTextBox.Name = "previewTextBox";
             this.previewTextBox.ReadOnly = true;
             this.previewTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.previewTextBox.Size = new System.Drawing.Size(706, 135);
+            this.previewTextBox.Size = new System.Drawing.Size(664, 169);
             this.previewTextBox.TabIndex = 12;
             this.previewTextBox.TabStop = false;
             this.previewTextBox.WordWrap = false;
@@ -497,68 +503,48 @@
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2,
-            this.toolStripStatusLabel3});
-            this.statusStrip.Location = new System.Drawing.Point(0, 426);
+            this.toolStripStatusLabel,
+            this.linesCountToolStripStatusLabel,
+            this.lastFoundLineNumToolStripStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 468);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.statusStrip.Size = new System.Drawing.Size(732, 29);
+            this.statusStrip.Size = new System.Drawing.Size(684, 24);
             this.statusStrip.TabIndex = 15;
             this.statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(138, 24);
-            this.toolStripStatusLabel1.Text = "Файл не загружен.";
-            // 
-            // toolStripStatusLabel3
-            // 
-            this.toolStripStatusLabel3.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(226, 24);
-            this.toolStripStatusLabel3.Text = "Последняя найденная строка: ";
+            this.toolStripStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(109, 19);
+            this.toolStripStatusLabel.Text = "Файл не загружен.";
             // 
             // toolStripStatusLabel2
             // 
-            this.toolStripStatusLabel2.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.toolStripStatusLabel2.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(109, 24);
-            this.toolStripStatusLabel2.Text = "Всего строк: 0";
+            this.linesCountToolStripStatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.linesCountToolStripStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.linesCountToolStripStatusLabel.Name = "toolStripStatusLabel2";
+            this.linesCountToolStripStatusLabel.Size = new System.Drawing.Size(88, 19);
+            this.linesCountToolStripStatusLabel.Text = "Всего строк: 0";
             // 
-            // toolStripSeparator3
+            // toolStripStatusLabel3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(190, 6);
-            // 
-            // searchSplitButton
-            // 
-            this.searchSplitButton.ContextMenuStrip = this.contextMenuStrip;
-            this.searchSplitButton.Location = new System.Drawing.Point(27, 116);
-            this.searchSplitButton.Margin = new System.Windows.Forms.Padding(4);
-            this.searchSplitButton.Name = "searchSplitButton";
-            this.searchSplitButton.Size = new System.Drawing.Size(128, 28);
-            this.searchSplitButton.TabIndex = 18;
-            this.searchSplitButton.Text = "Поиск вперед";
-            this.searchSplitButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.searchSplitButton.UseVisualStyleBackColor = true;
-            this.searchSplitButton.Click += new System.EventHandler(this.searchSplitButton_Click);
+            this.lastFoundLineNumToolStripStatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.lastFoundLineNumToolStripStatusLabel.Name = "toolStripStatusLabel3";
+            this.lastFoundLineNumToolStripStatusLabel.Size = new System.Drawing.Size(178, 19);
+            this.lastFoundLineNumToolStripStatusLabel.Text = "Последняя найденная строка: ";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 455);
+            this.ClientSize = new System.Drawing.Size(684, 492);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.previewGroupBox);
             this.Controls.Add(this.settingsGroupBox);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(750, 500);
+            this.MinimumSize = new System.Drawing.Size(650, 500);
             this.Name = "MainForm";
             this.Text = "CGGTTS File Filter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -582,11 +568,11 @@
 
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem openFileMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.GroupBox settingsGroupBox;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem saveMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsMenuItem;
         private System.Windows.Forms.CheckBox frcCheckBox;
         private System.Windows.Forms.CheckBox sttimeCheckBox;
@@ -602,8 +588,8 @@
         private System.Windows.Forms.DateTimePicker sttimePickerTo;
         private System.Windows.Forms.DateTimePicker sttimePickerFrom;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel linesCountToolStripStatusLabel;
         private System.Windows.Forms.ListBox gloSatListBox;
         private System.Windows.Forms.ListBox gpsSatListBox;
         private System.Windows.Forms.Label glonassLabel;
@@ -617,11 +603,12 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button deleteStringsButton;
         private SplitButton searchSplitButton;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+        private System.Windows.Forms.ToolStripStatusLabel lastFoundLineNumToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exportToExcelMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ComboBox mjdComboBox;
+        private System.Windows.Forms.ListBox messagesListBox;
 
         public System.EventHandler settingsGroupBox_Enter { get; set; }
     }
