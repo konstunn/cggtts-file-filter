@@ -18,8 +18,7 @@ namespace CGGTTS_File_Filter
     {
         // TODO:
         // - skip to lines on messages list box click
-        // - refresh sat listboxes on mjd combobox value change
-        // - replace sat numeric up down with combobox !
+        // - refresh sat listboxes on mjd combobox value change !
         // - add edit menu and undo, redo buttons in there
 
         // TODO: optimize, reorganize data structures ?
@@ -143,14 +142,23 @@ namespace CGGTTS_File_Filter
 
         // TODO: try to generalize and join these methods into one
         private void satCheckBox_CheckedChanged(object sender, EventArgs e) {
-            satNumericUpDown.Enabled = !satNumericUpDown.Enabled;
+            satComboBox.Enabled = !satComboBox.Enabled;
         }
+
+
 
         private void mjdCheckBox_CheckedChanged(object sender, EventArgs e) {
             mjdComboBox.Enabled = !mjdComboBox.Enabled;
 
-            // TODO: refresh sat ListBoxes correspondingly
-            if (mjdCheckBox.Enabled) { }
+            if (!mjdCheckBox.Enabled) {
+                // restore sat list boxes and combobox values
+                updateSatControls(satOptions);
+            } else if (mjdComboBox.SelectedIndex > -1) {
+                // TODO form satOptions for the mjd value
+                //
+
+                //updateSatControls
+            }
         }
 
         private void sttimeCheckBox_CheckedChanged(object sender, EventArgs e) {
@@ -180,16 +188,22 @@ namespace CGGTTS_File_Filter
                 return false;
             }
 
-            if (frcComboBox.SelectedIndex == -1 && frcCheckBox.Checked)
+            if (satComboBox.SelectedIndex == -1 && satCheckBox.Checked)
             {
+                // this would happen rarely
+                MessageBox.Show("Не выбрано значение критерия SAT.", "Ошибка", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (frcComboBox.SelectedIndex == -1 && frcCheckBox.Checked) {
                 // this would happen rarely
                 MessageBox.Show("Не выбрано значение критерия FRC.", "Ошибка", MessageBoxButtons.OK, 
                     MessageBoxIcon.Warning);
                 return false;
             }
 
-            if (mjdComboBox.SelectedIndex == -1 && mjdCheckBox.Checked)
-            {
+            if (mjdComboBox.SelectedIndex == -1 && mjdCheckBox.Checked) {
                 // this would happen rarely
                 MessageBox.Show("Не выбрано значение критерия MJD.", "Ошибка", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -204,7 +218,7 @@ namespace CGGTTS_File_Filter
             string str = DateTime.Now.ToString("HH:mm:ss") + " : Удал ";
 
             if (satCheckBox.Checked)
-                str += "SAT = " + satNumericUpDown.Value.ToString();
+                str += "SAT = " + satComboBox.Text;
             if (mjdCheckBox.Checked)
                 str += ", MJD = " + mjdComboBox.Text;
             if (frcCheckBox.Checked)
@@ -287,7 +301,7 @@ namespace CGGTTS_File_Filter
 
                 // TODO: refactor
                 // if the line satisfies criteria
-                if ((!satCheckBox.Checked || satNo == satNumericUpDown.Value) &&
+                if ((!satCheckBox.Checked || satNo == Int32.Parse(satComboBox.Text)) &&
                     (!mjdCheckBox.Checked || mjd == Int32.Parse(mjdComboBox.Text)) &&
                     (!sttimeCheckBox.Checked || timeMatches) &&
                     (!frcCheckBox.Checked || frc == frcComboBox.Text))
@@ -331,32 +345,46 @@ namespace CGGTTS_File_Filter
             Cursor.Current = Cursors.Default;
         }
 
-        private void updateCriteriaControls()
+        private void zeroComboBoxSelectedIndex(ComboBox cb) {
+            if (cb.Items.Count > 0)
+                cb.SelectedIndex = 0;
+        }
+
+        private void updateSatControls(SortedSet<int> ssi)
         {
             gloSatListBox.Items.Clear();
             gpsSatListBox.Items.Clear();
+            satComboBox.Items.Clear();
 
-            foreach (int satNo in satOptions)
+            foreach (int satNo in ssi)
             {
                 if (satNo > 100)
                     gloSatListBox.Items.Add(satNo - 100);
                 else
                     gpsSatListBox.Items.Add(satNo);
+                satComboBox.Items.Add(satNo);
             }
+            zeroComboBoxSelectedIndex(satComboBox);
+        }
 
+        private void updateCriteriaControls() 
+        {
+            // fill sat list boxes and sat combobox
+            updateSatControls(satOptions);
+
+            // fill mjd combobox
             mjdComboBox.Items.Clear();
 
             foreach (string line in mjdOptions)
                 mjdComboBox.Items.Add(line);
-            if (mjdComboBox.Items.Count > 0)
-                mjdComboBox.SelectedIndex = 0;
+            zeroComboBoxSelectedIndex(mjdComboBox);
 
+            // fill frc combobox
             frcComboBox.Items.Clear();
 
             foreach (string line in frcOptions)
                 frcComboBox.Items.Add(line);
-            if (frcComboBox.Items.Count > 0)
-                frcComboBox.SelectedIndex = 0;
+            zeroComboBoxSelectedIndex(frcComboBox);
         }
 
         private void enableSaveButtons(bool enabled) {
@@ -489,8 +517,8 @@ namespace CGGTTS_File_Filter
                 }
 
                 // TODO: refactor
-                if ((!satCheckBox.Checked || (satNumericUpDown.Value == Int32.Parse(fields[SAT_FIELD_INDEX]))) &&
-                    (!mjdCheckBox.Checked || (mjdComboBox.Text == fields[MJD_FIELD_INDEX])) &&
+                if ((!satCheckBox.Checked || satComboBox.Text == fields[SAT_FIELD_INDEX]) &&
+                    (!mjdCheckBox.Checked || mjdComboBox.Text == fields[MJD_FIELD_INDEX]) &&
                     (!sttimeCheckBox.Checked || TimeSpan.Compare(time, sttimePickerFrom.Value.TimeOfDay) >= 0 &&
                                                 TimeSpan.Compare(time, sttimePickerTo.Value.TimeOfDay) <= 0) &&
                     (!frcCheckBox.Checked || (frcComboBox.Text == fields[FRC_FIELD_INDEX])))
@@ -522,11 +550,11 @@ namespace CGGTTS_File_Filter
                 }
 
                 // TODO: refactor
-                if ((!satCheckBox.Checked || (satNumericUpDown.Value == Int32.Parse(fields[SAT_FIELD_INDEX]))) &&
-                    (!mjdCheckBox.Checked || (mjdComboBox.Text == fields[MJD_FIELD_INDEX])) &&
+                if ((!satCheckBox.Checked || satComboBox.Text == fields[SAT_FIELD_INDEX]) &&
+                    (!mjdCheckBox.Checked || mjdComboBox.Text == fields[MJD_FIELD_INDEX]) &&
                     (!sttimeCheckBox.Checked || TimeSpan.Compare(time, sttimePickerFrom.Value.TimeOfDay) >= 0 &&
                                                 TimeSpan.Compare(time, sttimePickerTo.Value.TimeOfDay) <= 0) &&
-                    (!frcCheckBox.Checked || (frcComboBox.Text == fields[FRC_FIELD_INDEX])))
+                    (!frcCheckBox.Checked || frcComboBox.Text == fields[FRC_FIELD_INDEX]))
                 {
                     return i;
                 }
@@ -688,6 +716,17 @@ namespace CGGTTS_File_Filter
 
             enableSaveButtons(false);
         }
+
+        //System.Data.Sql.
+
+        private void mjdComboBox_ValueMemberChanged(object sender, EventArgs e)
+        {
+            // TODO: update sat list boxes correspondingly
+
+
+        }
+
+
 
         // TODO: disable save menu items if file was not modified
     }

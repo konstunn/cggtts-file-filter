@@ -51,9 +51,9 @@
             this.deleteStringsButton = new System.Windows.Forms.Button();
             this.changelogLabel = new System.Windows.Forms.Label();
             this.changelogTextBox = new System.Windows.Forms.TextBox();
+            this.satComboBox = new System.Windows.Forms.ComboBox();
             this.mjdComboBox = new System.Windows.Forms.ComboBox();
             this.dashLabel = new System.Windows.Forms.Label();
-            this.satNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.frcComboBox = new System.Windows.Forms.ComboBox();
             this.frcCheckBox = new System.Windows.Forms.CheckBox();
             this.sttimeCheckBox = new System.Windows.Forms.CheckBox();
@@ -76,7 +76,6 @@
             this.settingsGroupBox.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.satNumericUpDown)).BeginInit();
             this.previewGroupBox.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -129,9 +128,9 @@
             this.fileMenuItem.Size = new System.Drawing.Size(48, 20);
             this.fileMenuItem.Text = "Файл";
             // 
-            // toolStripMenuItem2
+            // openFileMenuItem
             // 
-            this.openFileMenuItem.Name = "toolStripMenuItem2";
+            this.openFileMenuItem.Name = "openFileMenuItem";
             this.openFileMenuItem.Size = new System.Drawing.Size(162, 22);
             this.openFileMenuItem.Text = "Открыть...";
             this.openFileMenuItem.Click += new System.EventHandler(this.openFileMenuItem_Click);
@@ -191,11 +190,11 @@
             this.settingsGroupBox.Controls.Add(this.groupBox1);
             this.settingsGroupBox.Controls.Add(this.changelogLabel);
             this.settingsGroupBox.Controls.Add(this.changelogTextBox);
+            this.settingsGroupBox.Controls.Add(this.satComboBox);
             this.settingsGroupBox.Controls.Add(this.mjdComboBox);
             this.settingsGroupBox.Controls.Add(this.sttimePickerTo);
             this.settingsGroupBox.Controls.Add(this.sttimePickerFrom);
             this.settingsGroupBox.Controls.Add(this.dashLabel);
-            this.settingsGroupBox.Controls.Add(this.satNumericUpDown);
             this.settingsGroupBox.Controls.Add(this.frcComboBox);
             this.settingsGroupBox.Controls.Add(this.frcCheckBox);
             this.settingsGroupBox.Controls.Add(this.sttimeCheckBox);
@@ -305,6 +304,17 @@
             this.changelogTextBox.TabStop = false;
             this.changelogTextBox.WordWrap = false;
             // 
+            // satComboBox
+            // 
+            this.satComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.satComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.satComboBox.Enabled = false;
+            this.satComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.satComboBox.Location = new System.Drawing.Point(69, 20);
+            this.satComboBox.Name = "satComboBox";
+            this.satComboBox.Size = new System.Drawing.Size(55, 21);
+            this.satComboBox.TabIndex = 11;
+            // 
             // mjdComboBox
             // 
             this.mjdComboBox.BackColor = System.Drawing.SystemColors.Window;
@@ -316,6 +326,7 @@
             this.mjdComboBox.Size = new System.Drawing.Size(55, 21);
             this.mjdComboBox.Sorted = true;
             this.mjdComboBox.TabIndex = 11;
+            this.mjdComboBox.ValueMemberChanged += new System.EventHandler(this.mjdComboBox_ValueMemberChanged);
             // 
             // dashLabel
             // 
@@ -327,24 +338,6 @@
             this.dashLabel.Size = new System.Drawing.Size(13, 17);
             this.dashLabel.TabIndex = 4;
             this.dashLabel.Text = "-";
-            // 
-            // satNumericUpDown
-            // 
-            this.satNumericUpDown.Enabled = false;
-            this.satNumericUpDown.Location = new System.Drawing.Point(69, 22);
-            this.satNumericUpDown.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.satNumericUpDown.Name = "satNumericUpDown";
-            this.satNumericUpDown.Size = new System.Drawing.Size(55, 20);
-            this.satNumericUpDown.TabIndex = 3;
-            this.satNumericUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // frcComboBox
             // 
@@ -512,25 +505,25 @@
             this.statusStrip.TabIndex = 15;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(109, 19);
             this.toolStripStatusLabel.Text = "Файл не загружен.";
             // 
-            // toolStripStatusLabel2
+            // linesCountToolStripStatusLabel
             // 
             this.linesCountToolStripStatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.linesCountToolStripStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.linesCountToolStripStatusLabel.Name = "toolStripStatusLabel2";
+            this.linesCountToolStripStatusLabel.Name = "linesCountToolStripStatusLabel";
             this.linesCountToolStripStatusLabel.Size = new System.Drawing.Size(88, 19);
             this.linesCountToolStripStatusLabel.Text = "Всего строк: 0";
             // 
-            // toolStripStatusLabel3
+            // lastFoundLineNumToolStripStatusLabel
             // 
             this.lastFoundLineNumToolStripStatusLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.lastFoundLineNumToolStripStatusLabel.Name = "toolStripStatusLabel3";
+            this.lastFoundLineNumToolStripStatusLabel.Name = "lastFoundLineNumToolStripStatusLabel";
             this.lastFoundLineNumToolStripStatusLabel.Size = new System.Drawing.Size(178, 19);
             this.lastFoundLineNumToolStripStatusLabel.Text = "Последняя найденная строка: ";
             // 
@@ -554,7 +547,6 @@
             this.settingsGroupBox.PerformLayout();
             this.contextMenuStrip.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.satNumericUpDown)).EndInit();
             this.previewGroupBox.ResumeLayout(false);
             this.previewGroupBox.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -579,7 +571,6 @@
         private System.Windows.Forms.CheckBox mjdCheckBox;
         private System.Windows.Forms.CheckBox satCheckBox;
         private System.Windows.Forms.ComboBox frcComboBox;
-        private System.Windows.Forms.NumericUpDown satNumericUpDown;
         private System.Windows.Forms.Label dashLabel;
         private System.Windows.Forms.GroupBox previewGroupBox;
         private System.Windows.Forms.TextBox previewTextBox;
@@ -609,6 +600,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ComboBox mjdComboBox;
         private System.Windows.Forms.ListBox messagesListBox;
+        private System.Windows.Forms.ComboBox satComboBox;
 
         public System.EventHandler settingsGroupBox_Enter { get; set; }
     }
