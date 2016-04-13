@@ -1,3 +1,3 @@
 # cggtts-file-filter
 
-Remove lines from CGGTTS (Common GLONASS/GPS Time Transfer Format) files matching criteria.
+Windows Forms GUI application for removing lines, which match given criteria, from CGGTTS (Common GLONASS/GPS Time Transfer Format) files.
