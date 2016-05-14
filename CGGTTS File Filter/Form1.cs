@@ -10,7 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+#if WINDOWS
 using Excel = Microsoft.Office.Interop.Excel;
+#endif
 
 namespace CGGTTS_File_Filter
 {
@@ -625,6 +628,7 @@ namespace CGGTTS_File_Filter
             previewTextBox.ScrollToCaret();    
         }
         
+		#if WINDOWS
         private void exportToExcelMenuItem_Click(object sender, EventArgs e)
         {
             Excel.Application xlApp = null;
@@ -697,6 +701,7 @@ namespace CGGTTS_File_Filter
                 GC.Collect();
             }
         }
+		#endif
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
