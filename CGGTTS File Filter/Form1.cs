@@ -23,6 +23,14 @@ namespace CGGTTS_File_Filter
         // - skip to lines on messages list box click
         // - refresh sat listboxes on mjd combobox value change !
         // - add edit menu and undo, redo buttons in there
+        // - beware of cggtts hat
+        // - add progress bar
+        // - add reload file button
+
+        // FIXME:
+        // - on quit after save it says that there are still
+        //      unsaved changes
+        // -
 
         // TODO: optimize, reorganize data structures ?
 
@@ -628,7 +636,7 @@ namespace CGGTTS_File_Filter
             previewTextBox.ScrollToCaret();    
         }
         
-		#if WINDOWS
+        #if WINDOWS
         private void exportToExcelMenuItem_Click(object sender, EventArgs e)
         {
             Excel.Application xlApp = null;
@@ -701,7 +709,7 @@ namespace CGGTTS_File_Filter
                 GC.Collect();
             }
         }
-		#endif
+        #endif
 
         private void saveMenuItem_Click(object sender, EventArgs e)
         {
